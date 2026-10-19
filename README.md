@@ -62,29 +62,29 @@ The Heltec V4 has two board revisions that use different front-end modules. The 
 
 A single `rtnode_heltec_v4` binary runs correctly on both revisions.
 
-#### V4 R8 (8 MB PSRAM) — experimental
+#### V4 R8 (8 MB PSRAM)
 
 Heltec also makes the V4 with an **ESP32-S3R8** (8 MB *octal* PSRAM). Its PSRAM
 needs a different driver, and it takes GPIO33–37, so Heltec moved the OLED power
 switch (Vext) to GPIO40 and the LED to GPIO46 and dropped the battery divider's
-control pin. The **`rtnode_heltec_v4_r8`** build has both. It is still
-**experimental**: so far it has run on one R8 (October 2026), where WiFi, the
-setup portal, Bluetooth, the firewall and LAN contract tests, and LoRa round
-trips to a second RTNode all passed (`CONTRACT_TESTS.md`). Its range has not
-been measured.
+control pin. The **`rtnode_heltec_v4_r8`** build has both. So far it has run on
+one R8 (October 2026), where WiFi, the setup portal, Bluetooth, the firewall and
+LAN contract tests, and LoRa round trips to a second RTNode all passed
+(`CONTRACT_TESTS.md`). Its range has not been measured.
 
 Every R8 has the V4.3's KCT8103L front end, but its CSD reads low at boot like a
 V4.2's, so the R8 build does not detect the front end: it always uses the
 KCT8103L once its octal PSRAM is running. The v1.0.51 R8 build did detect, took
-the R8 for a V4.2 and left the KCT8103L's TX path unselected; expect less range
-from it until a release has the fix.
+the R8 for a V4.2 and left the KCT8103L's TX path unselected, so expect less
+range from it; v1.0.52 fixes this.
 
 - The standard V4 build also runs on an R8, without its PSRAM: no Bluetooth,
   smaller tables, and probably a blank screen.
 - The R8 build on a 2 MB V4 (flashed by mistake) boots without PSRAM and keeps
   the V4 pins; flash the standard build again to get the PSRAM back.
-- Neither flasher picks the R8 build on its own: the web flasher offers it when
-  it detects 8 MB of PSRAM, and `flash.py` takes `--board v4-r8`.
+- Both flashers pick the R8 build when they detect 8 MB of PSRAM (from
+  v1.0.52; v1.0.51's offered it as an opt-in). The web flasher has a box to use
+  the standard V4 build instead, and `flash.py` takes `--board v4`.
 
 ## Quick Start
 
@@ -119,7 +119,7 @@ python flash.py --use-system-esptool
 # Or specify board explicitly
 python flash.py --board v3
 python flash.py --board v4
-python flash.py --board v4-r8   # V4 with 8 MB PSRAM — experimental build
+python flash.py --board v4-r8   # V4 with 8 MB PSRAM (chosen automatically on an R8)
 
 # Or flash a local binary
 python flash.py --file rtnode_heltec_v4.bin
@@ -145,7 +145,7 @@ pio run -e rtnode_heltec_v4
 # Build for V3
 pio run -e rtnode_heltec_v3
 
-# Build for V4 R8 (8 MB octal PSRAM) — experimental
+# Build for V4 R8 (8 MB octal PSRAM)
 pio run -e rtnode_heltec_v4_r8
 
 # Flash (via PlatformIO)

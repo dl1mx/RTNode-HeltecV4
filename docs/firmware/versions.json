@@ -1,5 +1,20 @@
 [
   {
+    "tag": "v1.0.52",
+    "name": "v1.0.52 \u2014 V4 R8 radio fix and R8 detected by the flashers, faster Bluetooth links, WiFi off means off",
+    "stability": "beta",
+    "prerelease": false,
+    "published_at": "2026-10-19T00:00:00Z",
+    "assets": [
+      "rtnode_heltec_v3.bin",
+      "rtnode_heltec_v3_merged.bin",
+      "rtnode_heltec_v4.bin",
+      "rtnode_heltec_v4_merged.bin",
+      "rtnode_heltec_v4_r8.bin",
+      "rtnode_heltec_v4_r8_merged.bin"
+    ]
+  },
+  {
     "tag": "v1.0.51",
     "name": "v1.0.51 \u2014 Bluetooth LE peers (Columba, Prns), V4 R8 build (experimental), LoRa and firewall forwarding fixes",
     "stability": "beta",

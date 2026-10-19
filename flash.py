@@ -23,7 +23,7 @@ Usage:
     # Update firmware — V3
     python flash.py --board v3
 
-    # Update firmware — V4 R8 (8 MB octal PSRAM), experimental build
+    # Update firmware — V4 R8 (8 MB octal PSRAM); also chosen automatically on an R8
     python flash.py --board v4-r8
 
     # Flash a specific Beta release version
@@ -106,11 +106,11 @@ BOARD_PROFILES = {
             },
         },
     },
-    # V4 R8 (ESP32-S3R8, 8 MB octal PSRAM): its own build, experimental (not
-    # yet run on an R8). Never chosen automatically: the standard V4 build
-    # also runs on an R8, without its PSRAM.
+    # V4 R8 (ESP32-S3R8, 8 MB octal PSRAM): its own build, chosen when the
+    # board reports 8 MB PSRAM. The standard V4 build also runs on an R8,
+    # without its PSRAM (--board v4).
     "v4-r8": {
-        "name":      "Heltec WiFi LoRa 32 V4 R8 (experimental)",
+        "name":      "Heltec WiFi LoRa 32 V4 R8",
         "chip":      "ESP32-S3",
         "baud_rate": "921600",
         "flash_mode": "dio",
@@ -403,7 +403,7 @@ def detect_board(port, esptool_cmd):
     correct firmware variant.
 
     Returns a tuple (board_key, info_dict) on success, or (None, reason) on
-    failure.  ``board_key`` is "v3" or "v4".
+    failure.  ``board_key`` is "v3", "v4" or "v4-r8" (a V4 with 8 MB PSRAM).
     """
     info, err = read_flash_info(port, esptool_cmd)
     if not info:
@@ -419,9 +419,10 @@ def detect_board(port, esptool_cmd):
         if "PSRAM" in features.upper():
             board_key = "v4"
             if "PSRAM 8MB" in features.upper():
-                # V4 R8: the standard V4 build runs on it, without its PSRAM.
-                print("  This V4 has 8 MB octal PSRAM (V4 R8). The standard V4 build runs on it")
-                print("  without the PSRAM; the R8 build (experimental) uses it: --board v4-r8")
+                # V4 R8: its own build uses the octal PSRAM and the R8's pins.
+                board_key = "v4-r8"
+                print("  This V4 has 8 MB octal PSRAM (V4 R8): using the R8 build.")
+                print("  The standard V4 build runs on it without the PSRAM: --board v4")
         else:
             board_key = "v3"
     elif "ESP32" in chip_str:
@@ -1264,7 +1265,7 @@ Examples:
   python flash.py --board v3
       Download latest firmware and flash a V3 board.
   python flash.py --board v4-r8
-      Flash the experimental build for a V4 with 8 MB octal PSRAM (R8).
+      Flash the build for a V4 with 8 MB octal PSRAM (R8), detected or not.
   python flash.py --release v1.0.12
       Flash a specific Beta release tag.
   python flash.py --full
@@ -1283,8 +1284,8 @@ Examples:
     )
     parser.add_argument("--board", choices=["v3", "v4", "v4-r8"], default=None,
                         help="Target board: v3 (Heltec V3), v4 (Heltec V4: V4.2, V4.3) or "
-                             "v4-r8 (V4 with 8 MB octal PSRAM, experimental build). "
-                             "Auto-detected from connected device if omitted (never v4-r8).")
+                             "v4-r8 (V4 with 8 MB octal PSRAM). "
+                             "Auto-detected from connected device if omitted.")
     parser.add_argument("--file", "-f", help="Path to firmware binary to flash")
     parser.add_argument("--port", "-p", help="Serial port (auto-detected if omitted)")
     parser.add_argument("--baud", "-b", default=None, help="Baud rate (board-specific default)")
