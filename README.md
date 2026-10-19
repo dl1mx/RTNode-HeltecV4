@@ -67,9 +67,17 @@ A single `rtnode_heltec_v4` binary runs correctly on both revisions.
 Heltec also makes the V4 with an **ESP32-S3R8** (8 MB *octal* PSRAM). Its PSRAM
 needs a different driver, and it takes GPIO33–37, so Heltec moved the OLED power
 switch (Vext) to GPIO40 and the LED to GPIO46 and dropped the battery divider's
-control pin. The **`rtnode_heltec_v4_r8`** build has both. It is **experimental:
-not yet run on an R8** — the pin map is Heltec's, and matches another firmware's
-hardware-tested R8 port.
+control pin. The **`rtnode_heltec_v4_r8`** build has both. It is still
+**experimental**: so far it has run on one R8 (October 2026), where WiFi, the
+setup portal, Bluetooth, the firewall and LAN contract tests, and LoRa round
+trips to a second RTNode all passed (`CONTRACT_TESTS.md`). Its range has not
+been measured.
+
+Every R8 has the V4.3's KCT8103L front end, but its CSD reads low at boot like a
+V4.2's, so the R8 build does not detect the front end: it always uses the
+KCT8103L once its octal PSRAM is running. The v1.0.51 R8 build did detect, took
+the R8 for a V4.2 and left the KCT8103L's TX path unselected; expect less range
+from it until a release has the fix.
 
 - The standard V4 build also runs on an R8, without its PSRAM: no Bluetooth,
   smaller tables, and probably a blank screen.
