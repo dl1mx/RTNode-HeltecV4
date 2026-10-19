@@ -460,7 +460,9 @@
       // V4.2 (GC1109) and V4.3 (KCT8103L) FEM share these pins; so does the
       // V4 R8, a KCT8103L board (its GPIO46 is the LED, never CPS).
       // FEM type is auto-detected at runtime in sx126x.cpp via the GPIO2
-      // (CSD) default pull level: GC1109 → LOW, KCT8103L → HIGH.
+      // (CSD) default pull level: GC1109 → LOW, KCT8103L → HIGH. Not on an
+      // R8: its CSD reads LOW too, so the R8 build takes the KCT8103L
+      // whenever its octal PSRAM is running.
       //   GC1109   : CSD=GPIO2 (enable, HIGH), CPS=GPIO46 (PA mode)
       //   KCT8103L : CSD=GPIO2 (enable, HIGH), CTX=GPIO5  (TX/RX path)
       //              CPS is wired to DIO2 (SX126X_DIO2_AS_RF_SWITCH).

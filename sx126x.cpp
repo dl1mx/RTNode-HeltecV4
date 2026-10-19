@@ -379,7 +379,16 @@ int sx126x::begin(long frequency) {
         pinMode(LORA_PA_PWR_EN, OUTPUT);
         pinMode(LORA_PA_CSD, INPUT);
         digitalWrite(LORA_PA_PWR_EN, HIGH); delay(5);
-        if (digitalRead(LORA_PA_CSD) == HIGH) {
+        bool csd_high = (digitalRead(LORA_PA_CSD) == HIGH);
+        bool kct8103l = csd_high;
+        #if defined(HELTEC_V4_R8)
+          // Every R8 has the KCT8103L (Heltec's V4R8 datasheet: GPIO5 is
+          // PA_CTX, GPIO46 the LED; Meshtastic's heltec_v4_r8 variant uses
+          // it without detecting). The pull-level test does not hold on the
+          // R8: its CSD reads LOW, and the GC1109 path left CTX undriven.
+          if (heltec_v4_r8()) kct8103l = true;
+        #endif
+        if (kct8103l) {
           lora_pa_model = LORA_PA_KCT8103L;
           lora_lna_gain = LORA_LNA_KCT8103L_GAIN;
         } else {
@@ -387,7 +396,8 @@ int sx126x::begin(long frequency) {
         }
         #if defined(FIREWALL_MODE)
           Serial.print("[Boundary] PA detect: model=");
-          Serial.println(lora_pa_model == LORA_PA_KCT8103L ? "KCT8103L" : "GC1109");
+          Serial.print(lora_pa_model == LORA_PA_KCT8103L ? "KCT8103L" : "GC1109");
+          Serial.println(csd_high ? " csd=HIGH" : " csd=LOW");
         #endif
       #endif
     }
