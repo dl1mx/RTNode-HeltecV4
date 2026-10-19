@@ -237,3 +237,5 @@ All on `bench/instrumentation`, found by these suites:
 | 2026-09-28 | + 62747ca, ba3219e | lora neighbour | **PASS** | none repeated; no link entry made |
 | 2026-09-28 | same | lan tcp,prnsd,lora `--prnsd-gateway` | 22/24 | Bluetooth paths through prnsd pass (tcp→prnsd 0.45 s, prnsd→tcp 0.29 s, lora→prnsd 4.4 s); prnsd→lora held by prnsd's path gate after another agent's request (checks now use a fresh destination); lora→prnsd packets lost with the Prns peer, which dropped (0x208) |
 | 2026-09-28 | same | wan tcp,tcp2 | **18/18** | flood LAN–LAN echo p50 199 ms |
+| 2026-10-19 | 8b29734, R8 bench build (`rtnode_heltec_v4_r8` + RTNODE_BENCH flags) on a V4 R8 (ESP32-S3R8, 8 MB octal PSRAM) | wan tcp,tcp2 | **18/18** | first run on an R8; flood: 1201 announces, 0 leaked, LAN–LAN echo p50 186 ms, LAN–WAN p50 495 ms; no reboot or panic, heap min 157 KB, stall max 255 ms. Before 8b29734 the R8 was detected as a GC1109 (its CSD reads LOW) |
+| 2026-10-19 | same | lan tcp,tcp2,tcp3 | **24/24** | no LoRa radio or prnsd on the bench this time; stalls up to 3.0 s in TCP writes during the 20 kB resources (as on the V4.2) |
