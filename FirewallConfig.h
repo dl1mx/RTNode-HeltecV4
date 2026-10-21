@@ -287,7 +287,7 @@ static void config_send_html() {
     html += F(
         "'>"
         "<label>Password</label>"
-        "<input name='psk' type='password' maxlength='32' placeholder='WiFi password' value='"
+        "<input name='psk' type='password' maxlength='63' placeholder='WiFi password' value='"
     );
     html += String(cur_psk);
     html += F("'>");
