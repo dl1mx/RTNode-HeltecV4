@@ -123,7 +123,7 @@ static uint8_t config_default_display_rotation() {
 static void config_send_html() {
     // Read current values from EEPROM/globals for pre-population
     char cur_ssid[33] = "";
-    char cur_psk[63]  = "";
+    char cur_psk[64]  = "";
 
     for (int i = 0; i < 32; i++) {
         cur_ssid[i] = EEPROM.read(config_addr(ADDR_CONF_SSID + i));
